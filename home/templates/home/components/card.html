@@ -1,0 +1,35 @@
+{% load humanize %}
+{% load home_tags %}
+
+<div class="col">
+    <div class="card h-100">
+        <a href="{% url 'shop:product_detail' slug=product.slug %}">
+            <img src="{{ product.image1.url }}" class="card-img-top" alt="{{ product.name }}">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="{% url 'shop:product_detail' slug=product.slug %}">{{ product.name }}</a>
+            </h5>
+            <p class="card-text">{{ product.excerpt|truncatechars:350 }}</p>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">
+            {% if product.discount %}
+                <span class="price">
+                    &#x20B9;{% discount_price price=product.price off=product.discount %}
+                </span>
+                <strike>
+                    &#x20B9;{{ product.price|intcomma }}
+                </strike>
+                <span class="off">
+                    &lpar;{{ product.discount }}&percnt; OFF&rpar;
+                </span>
+            {% else %}
+                <span class="price">
+                    &#x20B9;{{ product.price|intcomma }}
+                </span>
+            {% endif %}
+            </small>
+        </div>
+    </div>
+</div>

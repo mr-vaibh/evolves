@@ -1,0 +1,47 @@
+{% extends 'home/base.html' %}
+
+{% load home_tags %}
+
+{% block title %}Evolves — Best Online Shopping platform{% endblock title %}
+
+{% block css %}
+.price {
+    color: rgb(223 0 0);
+    font-size: 1.5em;
+}
+.off {
+    color: rgb(0 0 0);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+{% endblock css %}
+
+{% block body %}
+
+<div class="container">
+    
+    <div class="my-5">
+        <h2>Featured Products</h2>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for product in featured %}
+            {% include 'home/components/card.html' with product=product.product %}
+        {% endfor %}
+        </div>
+    </div>
+
+    {% for product_list in products_of_categories %}
+        <div class="my-5">
+            <h3>Flash Sale On <a href="{% url 'home:category' category=product_list.0.category %}">{{ product_list.0.category|capfirst }}</a> - Recommended Items</h3>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for product in product_list %}
+                {% include 'home/components/card.html' with product=product %}
+            {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock body %}

@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Evolves{% endblock %}
+
+{% comment %} {% block extrahead %}{{ block.super }}
+<style>
+:root {
+  --primary: #9774d5;
+  --secondary: #785cab;
+  --link-fg: #7c449b;
+  --link-selected-fg: #8f5bb2;
+}
+</style>
+{% endblock %} {% endcomment %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="/admin" title="{{ title }}">
+            {% comment %} <img src="{% static 'home/images/logo.png' %}" height="40px" alt="neutral tip"> {% endcomment %}
+            Evolves Admin Panel
+        </a>
+    </h1>
+{% endblock branding %}
