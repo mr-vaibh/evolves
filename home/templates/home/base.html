@@ -47,7 +47,7 @@
                 <button class="btn btn-primary" type="button">Cart</button>
                 <a class="btn btn-outline-secondary" type="button" href="{% url 'account:logout' %}">Logout</a>
             {% else %}
-                <a class="btn btn-outline-secondary" type="button" href="{% url 'account:login' %}">Login</a>
+                <a class="btn btn-secondary" type="button" href="{% url 'account:login' %}">Login</a>
                 <a class="btn btn-outline-secondary" type="button" href="{% url 'account:register' %}">Sign Up</a>
             {% endif %}
             </div>
