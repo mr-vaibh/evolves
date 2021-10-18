@@ -1,0 +1,76 @@
+{% extends 'home/base.html' %}
+
+
+{% block title %}Sign Up | Evolves{% endblock title %}
+
+{% block body %}
+
+{% if request.user.is_authenticated %}
+<script>window.location = '/'</script>
+{% endif %}
+
+<div class="container">
+    <form class="mx-auto my-5 w-50" method="post">
+        <h1 class="text-center my-5">Create new account</h1>
+        {% csrf_token %}
+
+        {% if form.errors %}
+            Please make sure below requirements are fulfilled:
+            <ul>
+                <li><b>Username:</b> Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</li>
+                <li><b>Password:</b>
+                    <ul>
+                        <li>Your password can’t be too similar to your other personal information.</li>
+                        <li>Your password must contain at least 8 characters.</li>
+                        <li>Your password can’t be a commonly used password.</li>
+                        <li>Your password can’t be entirely numeric.</li>
+                    </ul>
+                </li>
+                <li><b>Password Confirmation:</b> Enter the same password as before, for verification.</li>
+            </ul>
+        {% endif %}
+        {% if form.subject.errors %}
+    <ol>
+    {% for error in form.subject.errors %}
+        <li><strong>{{ error|escape }}</strong></li>
+    {% endfor %}
+    </ol>
+{% endif %}
+        <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}: </label>
+            {{ form.username }}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label }}: </label>
+            {{ form.password1 }}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label }}: </label>
+            {{ form.password2 }}
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" name="terms" id="terms-n-policies">
+            <label for="terms-n-policies">
+                I agree with <a href="#" onclick="alert('L0L! there ain\'t any T&Cs')">Terms &amp; Policies</a>
+            </label>
+        </div>
+        <button type="submit" id="register" class="btn btn-primary" disabled>Sign Up</button>
+    </form>
+</div>
+
+{% endblock body %}
+
+
+{% block js %}
+const submitBtn = document.getElementById('register');
+const checkBox = document.getElementById('terms-n-policies');
+
+checkBox.addEventListener('change', (e) => {
+    e.preventDefault();
+    if (checkBox.checked === true) {
+        submitBtn.disabled = false;
+    } else if (checkBox.checked === false) {
+        submitBtn.disabled = true;
+    }
+})
+{% endblock js %}

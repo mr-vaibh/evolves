@@ -38,14 +38,18 @@
                     </ul>
                 </li>
                 <form class="d-flex" id="search-form">
-                    <input class="form-control me-2" id="search-field" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control me-2" id="search-field" type="search" placeholder="Type somethin'..." aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </ul>
             <div>
-                <button class="btn btn-primary" type="submit">Cart</button>
-                <button class="btn btn-outline-secondary" type="submit">Login</button>
-                <button class="btn btn-outline-secondary" type="submit">Sign Up</button>
+            {% if request.user.is_authenticated %}
+                <button class="btn btn-primary" type="button">Cart</button>
+                <a class="btn btn-outline-secondary" type="button" href="{% url 'account:logout' %}">Logout</a>
+            {% else %}
+                <a class="btn btn-outline-secondary" type="button" href="{% url 'account:login' %}">Login</a>
+                <a class="btn btn-outline-secondary" type="button" href="{% url 'account:register' %}">Sign Up</a>
+            {% endif %}
             </div>
         </div>
     </div>
