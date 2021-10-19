@@ -1,13 +1,9 @@
 from django.shortcuts import render, redirect
-from django import template
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.conf import settings
 
-from django.views.generic import View
 
-def cart():
+def cart(request):
     pass
 
 def register(request):
