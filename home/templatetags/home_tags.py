@@ -3,6 +3,9 @@ from django import template
 register = template.Library()
 
 @register.simple_tag
-def discount_price(price, off):
-    value = float(100 - off)/100 * float(price)
+def product_price(product):
+    price = product.price
+    discount = product.discount if product.discount else 0
+    value = float(100 - discount)/100 * float(price)
+    value = round(value, 2)
     return f'{value:,}'

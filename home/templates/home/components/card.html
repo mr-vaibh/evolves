@@ -16,11 +16,9 @@
             <small class="text-muted">
             {% if product.discount %}
                 <span class="price">
-                    &#x20B9;{% discount_price price=product.price off=product.discount %}
+                    &#x20B9;{% product_price product=product %}
                 </span>
-                <strike>
-                    &#x20B9;{{ product.price|intcomma }}
-                </strike>
+                <strike>&#x20B9;{{ product.price|intcomma }}</strike>
                 <span class="off">
                     &lpar;{{ product.discount }}&percnt; OFF&rpar;
                 </span>
