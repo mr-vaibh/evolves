@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.fields import TextField
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -16,12 +17,12 @@ gender_choices = (
 )
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, verbose_name=_("Related User"), on_delete=models.CASCADE)
+    user = models.OneToOneField(User, verbose_name=_("Related User"), on_delete=models.CASCADE, related_name='userprofile')
     dob = models.DateField(_("Date of Birth"), blank=True, null=True)
     phone_no = models.IntegerField(_("Phone Number"), null=True)
     gender = models.CharField(_("Gender"), choices=gender_choices, max_length=7, blank=True)
     address = models.JSONField(_("Address"), default=dict, blank=True, null=True, encoder=None, decoder=None)
-    cart = models.JSONField(_("Cart"), default=dict, blank=True, null=True, encoder=None, decoder=None)
+    cart = models.CharField(_("Cart"), max_length=10000, default='[]', blank=True, null=True)
 
     class Meta:
         verbose_name = 'User Profile'

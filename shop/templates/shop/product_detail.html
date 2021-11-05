@@ -1,7 +1,237 @@
 {% extends 'home/base.html' %}
+{% load humanize %}
+{% load home_tags %}
+
+{% block title %}{{ product.name }} | Evolves{% endblock title %}
+
+{% block css %}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: rgb(0, 0, 0);
+}
+
+.carousel-indicators .indicator {
+    background-color: rgb(0, 0, 0);
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+}
+
+.left-pane {
+    flex-basis: 40%;
+    background-color: #fafafa;
+}
+.right-pane {
+    flex-basis: 60%;
+    padding-left: 7%;
+    margin-top: 2em;
+}
+
+.video video {
+    width: 100%;
+    height: 500px;
+}
+.video i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%);
+    font-size: 3em;
+}
+
+.bi-star, .bi-star-fill, .bi-star-half {
+    color: #ffd700;
+}
+
+.price-cart {
+    display: flex;
+}
+.price-cart div {
+    margin: 0 1em 0 1em;
+}
+
+.price {
+    color: rgb(201, 0, 0);
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.available, .unavailable {
+    font-size: 1.2em;
+}
+.available {
+    color: rgb(0, 201, 0);
+}
+.unavailable {
+    color: rgb(201, 0, 0);
+}
+
+@media all and (max-width: 770px) {
+    .main {
+        flex-direction: column;
+    }
+    .left-pane {
+        text-align: center;
+    }
+}
+
+{% endblock css %}
 
 {% block body %}
 
+<div class="container my-5">
 
+    <div class="main">
+        <div class="left-pane">
+            <div id="carouselExampleControls" class="carousel carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for media in product_medias %}
+                    {% if product.video.url == media.url %}
+                    <div class="video carousel-item {% if forloop.first %}active{% endif %}">
+                        <video id="video" class="d-block w-100" src="{{ media.url }}"></video>
+                        <i class="bi bi-play-circle-fill"></i>
+                    </div>
+                    {% else %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ media.url }}" class="d-block w-100" alt="{{ product.name }}">
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            </div>
+        </div>
+        <div class="right-pane">
+            <h2>{{ product.name }}</h2>
+            
+            <p>{{ product.description }}</p>
+
+            <div style="font-size: 1.2em;">
+                <p class="stars">
+                    {% for star in filled_stars %}
+                        {% if forloop.last and half_star %}
+                            <i class="bi bi-star-half"></i>
+                        {% else %}
+                            <i class="bi bi-star-fill"></i>
+                        {% endif %}
+                    {% endfor %}
+                    {% for star in unfilled_stars %}
+                        <i class="bi bi-star"></i>
+                    {% endfor %}
+                    {{ avg_stars }} out of 5
+                </p>
+                
+                <p>
+                    {% if product.replacement != 'No' %}
+                        <i class="bi bi-reply-fill"></i>
+                        {{ product.replacement }} days replacement
+                    {% endif %}
+                </p>
+            </div>
+
+            <hr>
+            
+            <div class="price-cart">
+                <div class="price-section">
+                {% if product.stocks != 0 %}
+
+                    {% if product.discount %}
+                        <span class="price">&#x20B9;{% product_price product=product %} </span>
+                        <strike>&#x20B9;{{ product.price|intcomma }} </strike>
+                        <span class="off"> &lpar;{{ product.discount }}&percnt; OFF&rpar;</span>
+                    {% else %}
+                        <span class="price">&#x20B9;{{ product.price|intcomma }}</span>
+                    {% endif %}
+                    <p class="available">In Stock</p>
+                    
+                {% else %}
+                    <p class="unavailable">Currently Unavailable</p>
+                {% endif %}
+                </div>
+
+                <form method="post" class="cart-section">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="id_quantity">Qty.</label>
+                            <select name="quantity" class="form-control" id="id_quantity">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                            
+                            <button type="submit" id="add-to-cart" class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {{ user.userprofile.cart }}
+
+            <table id="features" class="table table-sm mt-3">
+                <tbody>
+                    <!-- <tr>
+                        <th>feature1</th>
+                        <td>value1</td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
 
 {% endblock body %}
+
+{% block js %}
+
+// To display product features
+const features = JSON.parse('{{ product.features|safe }}');
+
+const featureTable = document.getElementById('features');
+const tBody = featureTable.children[0];
+
+for (const key in features) {
+    if (Object.hasOwnProperty.call(features, key)) {
+        const value = features[key];
+
+        tBody.innerHTML += `<tr>
+                                <th>${key.toUpperCase()}</th>
+                                <td>${value}</td>
+                            </tr>`;
+    }
+}
+
+
+// To add product to cart
+$('#add-to-cart').on('click', function (e) {
+    const csrftoken = '{{ csrf_token }}';
+    
+    const productId = {{ product.id }};
+    const productSlug = '{{ product.slug }}';
+
+    const quantityValue = $('#id_quantity').val();
+
+    const oldCartObj = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : []
+    const newCartObj = {id: productId, slug: productSlug, quantity: parseInt(quantityValue)};
+    const updatedCart = [...oldCartObj, newCartObj];
+
+    update_cart(updatedCart, csrftoken);
+});
+
+{% endblock js %}
