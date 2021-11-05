@@ -13,6 +13,8 @@ class MyCronJob(CronJobBase):
 
         from django.db.models import Avg
 
+        print('Featured products updating...')
+        
         for product in Product.objects.all():
             response = ProductReview.objects.filter(product=product).aggregate(Avg('stars'))
 
