@@ -6,18 +6,6 @@ from shop.models import Category, Product, ProductReview
 # Create your views here.
 
 def index(request):
-    # # get 3 random categories
-    # random_categories = Category.objects.order_by('?')[:3]
-    # print(random_categories)
-
-    # # List of Products' Queryset of random categories
-    # product_of_categories = [
-    #     Product.objects.filter(category=random_categories[n])
-    #     for n in range(random_categories.count())
-    #     if Product.objects.filter(category=random_categories[n]).count() != 0
-    # ]
-    # print(product_of_categories)
-
     products_of_categories = []
     category_product = Product.objects.all()[:21].values('category', 'id')
     categories = {item['category'] for item in category_product}
