@@ -74,6 +74,9 @@ cart.forEach(product => {
     totalCost += product.price;
 });
 
+// adding commas
+totalCost = totalCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
 $('#total-price').text(totalCost + ".00");
 
 
