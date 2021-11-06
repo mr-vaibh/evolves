@@ -45,9 +45,9 @@ def search(request, query):
     context = {
         'query': query,
         'products': Product.objects.filter(name__icontains=query)
-        .union(Product.objects.filter(category__name__icontains=query))
-        .union(Product.objects.filter(sub_category__name__icontains=query))
-        .order_by('-created_at')
+            .union(Product.objects.filter(category__name__icontains=query))
+            .union(Product.objects.filter(sub_category__name__icontains=query))
+            .order_by('-created_at')
     }
     return render(request, 'shop/search.html', context)
 
