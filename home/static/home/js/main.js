@@ -13,20 +13,8 @@ $(document).ready(function () {
         }
     });
 
-    
+
     // To update localstorage
     get_cart();
-
-    
-    // Updating navigation CART
-    let totalCartItems = 0;
-
-    if (localStorage.getItem('cart') !== null) {
-        JSON.parse(localStorage.getItem('cart')).forEach(product => {
-            totalCartItems += product['quantity'];
-        });    
-    }
-    
-    $('#totalCartItems').text(totalCartItems.toString())
 
 });

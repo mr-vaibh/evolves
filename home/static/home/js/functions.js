@@ -20,6 +20,15 @@ function get_cart() {
 
                 localStorage.setItem('cart', JSON.stringify(cart));
             }
+
+            // Updating navigation CART
+            let totalCartItems = 0;
+            if (localStorage.getItem('cart') !== null) {
+                JSON.parse(localStorage.getItem('cart')).forEach(product => {
+                    totalCartItems += product['quantity'];
+                });    
+            }
+            $('#totalCartItems').text(totalCartItems.toString())
         }
     });
 }

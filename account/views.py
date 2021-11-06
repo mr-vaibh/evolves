@@ -3,13 +3,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 
 
-def cart(request):
-    pass
-
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
-        print(form.errors)
+        
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -20,3 +17,12 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'account/register.html', {'form': form})
+
+
+def cart(request):
+    context = {}
+    
+    if request.user.is_authenticated:
+        context['cart'] = request.user.userprofile.cart
+    
+    return render(request, 'account/cart.html', context)

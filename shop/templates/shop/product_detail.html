@@ -215,6 +215,16 @@ for (const key in features) {
     }
 }
 
+// To select appropriate QUANTITY option
+const cart = JSON.parse(localStorage.getItem('cart'));
+
+for (let i = 0; i < cart.length; i++) {
+    const product = cart[i];
+    
+    if (window.location.pathname.includes(product.slug)) {
+        $('#id_quantity').val(product.quantity);
+    }
+}
 
 // To add product to cart
 $('#add-to-cart').on('click', function (e) {
@@ -222,11 +232,21 @@ $('#add-to-cart').on('click', function (e) {
     
     const productId = {{ product.id }};
     const productSlug = '{{ product.slug }}';
+    const productName = '{{ product.name }}';
+    const productImg = '{{ product.image1.url }}';
+    const productPrice = {% product_price product=product num=True %};
 
     const quantityValue = $('#id_quantity').val();
 
     const oldCartObj = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : []
-    const newCartObj = {id: productId, slug: productSlug, quantity: parseInt(quantityValue)};
+    const newCartObj = {
+        id: productId,
+        slug: productSlug,
+        name: productName,
+        img: productImg,
+        price: productPrice,
+        quantity: parseInt(quantityValue),
+    };
     const updatedCart = [...oldCartObj, newCartObj];
 
     update_cart(updatedCart, csrftoken);

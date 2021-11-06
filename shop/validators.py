@@ -3,8 +3,6 @@ import os
 
 def validate_video_size(value):
     filesize= value.size
-    print(value)
-    print(filesize)
     
     if filesize > 52428800:
         raise ValidationError(f"The maximum file size that can be uploaded is 50MB")

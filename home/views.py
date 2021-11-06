@@ -14,7 +14,6 @@ def index(request):
     for category in categories:
         products = Product.objects.filter(category=category)[:5]
         products_of_categories.append(products)
-    print(products_of_categories)
 
     context = {
         'featured': FeaturedProduct.objects.all()[:3],

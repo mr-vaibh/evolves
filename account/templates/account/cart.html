@@ -1,0 +1,80 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Your Shopping Cart | Evolves{% endblock title %}
+
+{% block css %}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.product-name {
+    font-size: 1.2em;
+}
+.product-price {
+    font-size: .8em;
+}
+
+{% endblock css %}
+
+{% block body %}
+
+<div class="container w-75 my-5">
+    <h1>Your Cart</h1>
+
+
+    <ul class="list-group mx-auto">
+        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+            <span>Product</span>
+            <span>Quantity</span>
+        </li>
+        
+        <div id="cart-list"></div>
+        
+        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+            <span>Total</span>
+            <span class="fs-4">
+                &#x20B9;
+                <span id="total-price">0</span>
+            </span>
+        </li>
+
+    </ul>
+    
+    <a href="#" class="btn btn-primary btn-lg float-end my-3"><i class="bi bi-credit-card-fill"></i> Checkout &amp; Pay</a>
+
+    
+</div>
+
+{% endblock body %}
+
+{% block js %}
+
+const cart = JSON.parse(localStorage.getItem('cart'));
+
+cart.forEach(product => {
+    $('#cart-list').append(`<li class="list-group-item d-flex flex-row justify-content-between align-items-center">
+                                <a href="/product/${product.slug}" class="d-flex flex-row align-items-center">
+                                    <img src="${product.img}" alt="MacBook Air" width="100px">
+                                    
+                                    <div class="d-flex flex-column align-items-start flex-wrap p-3">
+                                        <p class="product-name">${product.name}</p>
+                                        <span class="badge rounded-pill bg-dark">&#x20B9; ${product.price}</span>
+                                    </div>
+                                </a>
+                                
+                                <span class="badge rounded-pill bg-primary fs-6">${product.quantity}</span>
+                            </li>`);
+});
+
+let totalCost = 0;
+
+cart.forEach(product => {
+    totalCost += product.price;
+});
+
+$('#total-price').text(totalCost + ".00");
+
+
+{% endblock js %}

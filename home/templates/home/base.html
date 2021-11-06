@@ -52,7 +52,14 @@
                 </form>
             </ul>
             <div>
-                <a class="btn btn-primary mx-1" type="button" href="{% url 'account:cart' %}"><i class="bi bi-cart"></i> Cart <span id="totalCartItems">0</span></a>
+                <a class="btn btn-primary position-relative mx-1" type="button" href="{% url 'account:cart' %}">
+                    <i class="bi bi-cart"></i>
+                    <span id="totalCartItems" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                        <span class="visually-hidden">unread messages</span>
+                    </span>
+                </a>
+            
             {% if request.user.is_authenticated %}
                 <a class="btn btn-outline-secondary" type="button" href="{% url 'account:logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a>
             {% else %}
