@@ -9,11 +9,37 @@ a {
     text-decoration: none;
 }
 
+.delete-product {
+    font-size: 18px;
+    color: red;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
 .product-name {
     font-size: 1.2em;
 }
 .product-price {
     font-size: .8em;
+}
+.product-image {
+    width: 100px;
+}
+
+.product-div {
+    flex-direction: row;
+}
+
+@media all and (max-width: 500px) {
+    .product-div {
+        flex-direction: column;
+    }
+    .product-name {
+        font-size: 1em;
+    }
+    .product-price {
+        font-size: .6em;
+    }
 }
 
 {% endblock css %}
@@ -27,7 +53,7 @@ a {
     <ul class="list-group mx-auto">
         <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
             <span>Product</span>
-            <span>Quantity</span>
+            <span>Quantity &nbsp;&nbsp;&nbsp;&nbsp;</span>
         </li>
         
         <div id="cart-list"></div>
@@ -51,35 +77,45 @@ a {
 
 {% block js %}
 
-const cart = JSON.parse(localStorage.getItem('cart'));
 
-cart.forEach(product => {
-    let newPriceString = product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+if (localStorage.getItem('cart') !== null) {
+    const cart = JSON.parse(localStorage.getItem('cart'));
     
-    $('#cart-list').append(`<li class="list-group-item d-flex flex-row justify-content-between align-items-center">
-                                <a href="/product/${product.slug}" class="d-flex flex-row align-items-center">
-                                    <img src="${product.img}" alt="MacBook Air" width="100px">
+    // to list and display all cart items
+    cart.forEach(product => {
+        let newPriceString = product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        
+        $('#cart-list').append(`<li id="listPr${product.id}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
+                                    <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
+                                        <img src="${product.img}" alt="MacBook Air" class="product-image">
+                                        
+                                        <div class="d-flex flex-column align-items-start flex-wrap p-3">
+                                            <p class="product-name">${product.name}</p>
+                                            <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString + ".00"}</span>
+                                        </div>
+                                    </a>
                                     
-                                    <div class="d-flex flex-column align-items-start flex-wrap p-3">
-                                        <p class="product-name">${product.name}</p>
-                                        <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString + ".00"}</span>
+                                    <div class="d-flex flex-row">
+                                        <span class="badge rounded-pill bg-primary fs-6">${product.quantity}</span>
+                                        <i id="deletePr${product.id}" class="delete-product bi bi-x-circle-fill"></i>
                                     </div>
-                                </a>
-                                
-                                <span class="badge rounded-pill bg-primary fs-6">${product.quantity}</span>
-                            </li>`);
+                                </li>`);
+    });
+}
+
+
+// To display total payable price
+update_total_price();
+
+
+// To delete specific product
+const csrftoken = '{{ csrf_token }}';
+
+$('.delete-product').on('click', (e) => {
+    const iconId = e.target.getAttribute('id');
+    const productId = parseInt(iconId.slice(8, iconId.length))
+
+    delete_cart(productId, csrftoken);
 });
-
-let totalCost = 0;
-
-cart.forEach(product => {
-    totalCost += product.price;
-});
-
-// adding commas
-totalCost = totalCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-
-$('#total-price').text(totalCost + ".00");
-
 
 {% endblock js %}

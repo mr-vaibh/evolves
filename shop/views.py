@@ -1,5 +1,6 @@
 from json.encoder import JSONEncoder
 from django import forms
+from django.http.request import QueryDict
 from django.http.response import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
@@ -92,4 +93,26 @@ def update_cart(request):
                 data = {'loggedin': True}
         else:
             data = {'loggedin': False, 'localCart': request.POST.get('cart')}
+    return JsonResponse(data)
+
+
+def delete_cart(request, product_id):
+    if request.method == 'DELETE':
+        if request.user.is_authenticated:
+            import json
+            
+            cart = json.loads(request.user.userprofile.cart)
+
+            for product in cart:
+                if product['id'] == product_id:
+                    cart.remove(product)
+                    break
+
+            cart = json.dumps(cart)
+
+            # update the object
+            UserProfile.objects.filter(user=request.user).update(cart=cart)
+            data = {'loggedin': True}
+        else:
+            data = {'loggedin': False}
     return JsonResponse(data)

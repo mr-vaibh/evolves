@@ -216,13 +216,15 @@ for (const key in features) {
 }
 
 // To select appropriate QUANTITY option
-const cart = JSON.parse(localStorage.getItem('cart'));
+if (localStorage.getItem('cart') !== null) {
+    const cart = JSON.parse(localStorage.getItem('cart'));
 
-for (let i = 0; i < cart.length; i++) {
-    const product = cart[i];
-    
-    if (window.location.pathname.includes(product.slug)) {
-        $('#id_quantity').val(product.quantity);
+    for (let i = 0; i < cart.length; i++) {
+        const product = cart[i];
+        
+        if (window.location.pathname.includes(product.slug)) {
+            $('#id_quantity').val(product.quantity);
+        }
     }
 }
 

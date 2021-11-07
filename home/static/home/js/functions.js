@@ -7,7 +7,20 @@ function removeDuplicates(data, key) {
     return [...new Map(data.map(item => [key(item), item])).values()]
 };
 
-function get_cart() {
+function update_total_price() {
+    const cart = JSON.parse(localStorage.getItem('cart'));
+    if (cart !== null) {
+        let totalCost = 0;
+        cart.forEach(product => {
+            totalCost += product.price;
+        });
+        console.log('helll9', totalCost);
+        totalCost = totalCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") // adding commas in total price
+        $('#total-price').text(totalCost + ".00");
+    }
+}
+
+function get_cart(reload=false) {
     // TODO: fix- localstorage getting overided to cloud cart without merging
     
     $.ajax({
@@ -21,14 +34,18 @@ function get_cart() {
                 localStorage.setItem('cart', JSON.stringify(cart));
             }
 
-            // Updating navigation CART
-            let totalCartItems = 0;
-            if (localStorage.getItem('cart') !== null) {
-                JSON.parse(localStorage.getItem('cart')).forEach(product => {
-                    totalCartItems += product['quantity'];
-                });    
+            if (reload) {
+                window.location.reload();
+            } else {
+                // Updating navigation CART
+                let totalCartItems = 0;
+                if (localStorage.getItem('cart') !== null) {
+                    JSON.parse(localStorage.getItem('cart')).forEach(product => {
+                        totalCartItems += product['quantity'];
+                    });    
+                }
+                $('#totalCartItems').text(totalCartItems.toString());
             }
-            $('#totalCartItems').text(totalCartItems.toString())
         }
     });
 }
@@ -62,6 +79,38 @@ function update_cart(updatedCart, csrftoken) {
 
                 localStorage.setItem('cart', JSON.stringify(localCart));
             }
+        }
+    });
+}
+
+
+function delete_cart(productId, csrftoken) {
+    $.ajax({
+        type: "DELETE",
+        url: "/api/deletecart/" + productId,
+        headers: { "X-CSRFToken": csrftoken },
+        dataType: "json",
+        success: function (response) {
+            if (response['loggedin'] == true) {
+                // some logged in cart stuff
+                get_cart(reload=true);
+            } else {
+                let cart = JSON.parse(localStorage.getItem('cart'));
+
+                for (let i = 0; i < cart.length; i++) {
+                    const product = cart[i];
+                    
+                    if (product['id'] == productId) {
+                        const productIndex = cart.indexOf(product);
+                        cart.splice(productIndex, 1);
+                        break;
+                    }
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+
+            window.location.reload();
         }
     });
 }

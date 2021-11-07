@@ -8,4 +8,5 @@ urlpatterns = [
     path('search/<str:query>/', views.search, name='search'),
     path('api/getcart/', views.get_cart, name='getcart'),
     path('api/updatecart/', views.update_cart, name='updatecart'),
+    path('api/deletecart/<int:product_id>', views.delete_cart, name='deletecart'),
 ]
