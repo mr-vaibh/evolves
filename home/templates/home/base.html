@@ -13,6 +13,8 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.6.1/font/bootstrap-icons.min.css" integrity="sha512-9a1QYep56cYgIPFq0JYfsh9xRYYmPBxKaD6/ZfVAtplQ6y9ZUSk7GxgC2dmwtxK9T2cGQOxCV6J2Ll51nrvP2w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+    
     <title>{% block title %}{% endblock title %}</title>
     
     <style>
@@ -47,8 +49,8 @@
                     </ul>
                 </li>
                 <form class="d-flex col-12" id="search-form">
-                    <input class="form-control me-2" id="search-field" type="search" placeholder="Type somethin'..." aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+                    <input class="form-control me-2" id="search-field" type="search" placeholder="Search for somethin' ur type..." aria-label="Search">
+                    <button class="btn btn-outline-success" id="search" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </ul>
             <div>
