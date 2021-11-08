@@ -83,7 +83,7 @@ if (localStorage.getItem('cart') !== null) {
     
     if (cart.length == 0) {
         $('#cart-list').append(`<li class="list-group-item d-flex flex-row justify-content-center align-items-center">
-                                    <h3 class="mx-auto">No products in cart!</h3>
+                                    <h3 class="mx-auto">Your CART is empty :(</h3>
                                 </li>`);
     }
     
@@ -109,7 +109,7 @@ if (localStorage.getItem('cart') !== null) {
     });
 } else {
     $('#cart-list').append(`<li class="list-group-item d-flex flex-row justify-content-center align-items-center">
-                                <h3 class="mx-auto">No products in cart!</h3>
+                                <h3 class="mx-auto">Your CART is empty :(</h3>
                             </li>`);
 }
 
