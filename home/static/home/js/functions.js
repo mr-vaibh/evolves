@@ -14,7 +14,6 @@ function update_total_price() {
         cart.forEach(product => {
             totalCost += product.price;
         });
-        console.log('helll9', totalCost);
         totalCost = totalCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") // adding commas in total price
         $('#total-price').text(totalCost + ".00");
     }
@@ -61,24 +60,24 @@ function update_cart(updatedCart, csrftoken) {
         headers: { "X-CSRFToken": csrftoken },
         dataType: "json",
         success: function (response) {
-            if (response['loggedin'] == true) {
-                // some logged in cart stuff
-                get_cart();
-            } else {
+            if (response['loggedin'] != true) {
                 const localCart = JSON.parse(response['localCart']);
-
+                
                 for (let i = 0; i < localCart.length - 1; i++) {
                     const product = localCart[i];
-
+                    
                     if (product['id'] == localCart[localCart.length - 1]['id']) {
                         product['quantity'] = localCart[localCart.length - 1]['quantity'];
                         localCart.pop();
                         break;
                     }
                 }
-
+                
                 localStorage.setItem('cart', JSON.stringify(localCart));
             }
+
+            // fetch cart
+            get_cart();
         }
     });
 }
