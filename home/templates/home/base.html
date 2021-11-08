@@ -35,7 +35,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 col-6">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         All
@@ -46,17 +46,19 @@
                     {% endfor %}
                     </ul>
                 </li>
-                <form class="d-flex" id="search-form">
+                <form class="d-flex col-12" id="search-form">
                     <input class="form-control me-2" id="search-field" type="search" placeholder="Type somethin'..." aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </ul>
             <div>
+                {% if request.user.is_authenticated %}<span class="mx-1">Hi, <b>{{ request.user|upper }}</b></span>{% endif %}
+
                 <a class="btn btn-primary position-relative mx-1" type="button" href="{% url 'account:cart' %}">
                     <i class="bi bi-cart"></i>
                     <span id="totalCartItems" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         0
-                        <span class="visually-hidden">unread messages</span>
+                        <span class="visually-hidden">cart items</span>
                     </span>
                 </a>
             
