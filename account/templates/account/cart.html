@@ -115,7 +115,15 @@ if (localStorage.getItem('cart') !== null) {
 
 
 // To display total payable price
-update_total_price();
+const cart = JSON.parse(localStorage.getItem('cart'));
+if (cart !== null) {
+    let totalCost = 0;
+    cart.forEach(product => {
+        totalCost += product.price * product.quantity;
+    });
+    totalCost = totalCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") // adding commas in total price
+    $('#total-price').text(totalCost + ".00");
+}
 
 
 // To delete specific product

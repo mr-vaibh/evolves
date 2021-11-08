@@ -7,17 +7,6 @@ function removeDuplicates(data, key) {
     return [...new Map(data.map(item => [key(item), item])).values()]
 };
 
-function update_total_price() {
-    const cart = JSON.parse(localStorage.getItem('cart'));
-    if (cart !== null) {
-        let totalCost = 0;
-        cart.forEach(product => {
-            totalCost += product.price;
-        });
-        totalCost = totalCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") // adding commas in total price
-        $('#total-price').text(totalCost + ".00");
-    }
-}
 
 function get_cart(reload=false) {
     // TODO: fix- localstorage getting overided to cloud cart without merging
