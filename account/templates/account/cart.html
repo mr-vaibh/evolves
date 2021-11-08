@@ -81,6 +81,12 @@ a {
 if (localStorage.getItem('cart') !== null) {
     const cart = JSON.parse(localStorage.getItem('cart'));
     
+    if (cart.length == 0) {
+        $('#cart-list').append(`<li class="list-group-item d-flex flex-row justify-content-center align-items-center">
+                                    <h3 class="mx-auto">No products in cart!</h3>
+                                </li>`);
+    }
+    
     // to list and display all cart items
     cart.forEach(product => {
         let newPriceString = product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -101,6 +107,10 @@ if (localStorage.getItem('cart') !== null) {
                                     </div>
                                 </li>`);
     });
+} else {
+    $('#cart-list').append(`<li class="list-group-item d-flex flex-row justify-content-center align-items-center">
+                                <h3 class="mx-auto">No products in cart!</h3>
+                            </li>`);
 }
 
 
