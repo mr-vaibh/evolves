@@ -9,7 +9,7 @@ from .validators import validate_video_size, validate_video_extension
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, default='')
+    name = models.CharField(max_length=100, default='', unique=True)
 
     class Meta:
         verbose_name = 'Category'
@@ -21,7 +21,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     category = models.ForeignKey("shop.Category", verbose_name=_("Category"), on_delete=models.CASCADE)
-    name = models.CharField(_("Sub Category"), max_length=100, default='')
+    name = models.CharField(_("Sub Category"), max_length=100, default='', unique=True)
 
     class Meta:
         verbose_name = 'Sub Category'

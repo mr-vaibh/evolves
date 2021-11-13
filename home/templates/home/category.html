@@ -1,7 +1,37 @@
 {% extends 'home/base.html' %}
 
+{% block title %}{{ category.name }} Items | Evolves{% endblock title %}
+
+{% block css %}
+.price {
+    color: rgb(223 0 0);
+    font-size: 1.5em;
+}
+.off {
+    color: rgb(0 0 0);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+{% endblock css %}
+
 {% block body %}
 
-hello {{ category }}
+<div class="container">
+
+    <div class="my-5">
+        {% if products %}
+            <h3>Best deals in <a href="{% url 'home:category' category=category.name %}">{{ category.name|capfirst }}</a></h3>
+
+            <div class="row my-3 row-cols-1 row-cols-md-3 g-4">
+            {% for product in products %}
+                {% include 'home/components/card.html' with product=product %}
+            {% endfor %}
+            </div>
+        {% else %}
+            <h1>Sorry, no products found in <a href="{% url 'home:category' category=category.name %}">{{ category.name|capfirst }}</a></h1>
+        {% endif %}
+    </div>
+
+</div>
 
 {% endblock body %}
