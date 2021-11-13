@@ -17,7 +17,6 @@ class MyCronJob(CronJobBase):
         
         for product in Product.objects.all():
             response = ProductReview.objects.filter(product=product).aggregate(Avg('stars'))
-            print(response)
 
             if response['stars__avg'] and response['stars__avg'] > 4.2:
                 FeaturedProduct.objects.update_or_create(product=product)
