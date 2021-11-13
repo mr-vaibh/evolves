@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, SubCategory, Product, ProductReview
+from .models import Category, SubCategory, Product, ProductReview, Order
 
 # Register your models here.
 class ProductReviewAdmin(admin.TabularInline):
@@ -29,3 +29,9 @@ class CategoryAdmin(admin.ModelAdmin):
 class SubCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', )
     search_fields = ('name', 'category', )
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'razp_order_id', 'status',)
+    list_filter = ('status',)
+    search_fields = ('user__username', 'user__email', 'user__userprofile__phone_no')

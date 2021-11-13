@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.expressions import F
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -65,6 +66,12 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.name
     
+    def net_price_each(self):
+        price = self.price
+        discount = self.discount if self.discount else 0
+        discounted_price = float(100 - discount)/100 * float(price)
+        return discounted_price
+    
     def save(self, *args, **kwargs):
         from django.template.defaultfilters import slugify
         from django.utils.crypto import get_random_string
@@ -83,8 +90,37 @@ class ProductReview(models.Model):
     user = models.ForeignKey(User, verbose_name=_("Related User"), on_delete=models.CASCADE)
     product = models.ForeignKey("shop.Product", verbose_name=_("Related Product"), on_delete=models.CASCADE)
     review = models.TextField(_("Product Review"), max_length=500)
-    stars = models.IntegerField(_("Stars"), null=True)
+    stars = models.PositiveSmallIntegerField(_("Stars"), null=True)
     datetime = models.DateTimeField(_("Review Date & Time"), auto_now_add=True)
 
     def __str__(self) -> str:
         return self.review
+
+
+class Order(models.Model):
+
+    STATUS_CHOICES = [
+        ('success', 'Success'),
+        ('failure', 'Failure'),
+        ('pending', 'Pending'),
+        ('refund', 'Refund'),
+    ]
+    
+    user = models.ForeignKey(User, verbose_name=_("Related User"), on_delete=models.CASCADE)
+    name = models.CharField(_("Order in name of"), max_length=100, default='', blank=False)
+    email = models.EmailField(_("Email"), blank=True, max_length=254)
+    phone_no = models.PositiveIntegerField(_("Phone Number"), blank=True, null=True)
+    address = models.CharField(_("Full Address"), max_length=500, default='', blank=False, null=True)
+    city = models.CharField(_("City"), max_length=500, default='', blank=False, null=True)
+    state = models.CharField(_("State"), max_length=500, default='', blank=False, null=True)
+    zip_code = models.PositiveIntegerField(_("Zip Code"))
+    items = models.CharField(_("Items"), max_length=10000, default='[]', blank=False, null=True)
+    razp_amount = models.PositiveIntegerField(_("RazorPay Amount (in Rs.)"), null=True)
+    razp_order_id = models.CharField(_("RazorPay Order ID"), max_length=100, default='', blank=False, null=True)
+    razp_payment_id = models.CharField(_("RazorPay Payment ID"), max_length=100, default='', blank=False, null=True)
+    razp_signature = models.CharField(_("RazorPay Signature"), max_length=100, default='', blank=False, null=True)
+    status = models.CharField(_("Status"), max_length=50, choices=STATUS_CHOICES, default='pending')
+    datetime = models.DateTimeField(_("Date & Time"), auto_now=True)
+
+    def __str__(self) -> str:
+        return 'Order ' + str(self.id) + ' - ' + self.user.username

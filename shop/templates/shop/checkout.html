@@ -1,0 +1,128 @@
+{% extends 'home/base.html' %}
+
+
+{% block title %}Checkout | Evolves{% endblock title %}
+
+
+{% block body %}
+
+<div class="container my-5">
+
+    <div class="col-8 mx-auto">
+        <form id="form" method="post" action="{% url 'shop:checkout' %}">
+            {% csrf_token %}
+            <input type="hidden" name="itemsJson" id="itemsJson">
+            <input type="hidden" name="amount" id="amount">
+
+            <div class="row mb-3">
+                <div class="form-group col-md-4">
+                    <label for="inputname">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ auto_fill.name }}" placeholder="eg. Joe Rogan" required>
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="inputEmail4">Email &lpar;optional&rpar;</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ auto_fill.email }}" placeholder="example@domain.com">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputPhone">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone_no" value="{{ auto_fill.phone_no }}" name="phone_no" required>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="inputAddress">Address</label>
+                <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="inputAddress2">Address line 2</label>
+                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor" required>
+            </div>
+
+            <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    <label for="inputCity">City</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputState">State</label>
+                    <input type="text" class="form-control" id="state" name="state" placeholder="Enter State" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="inputZip">Zip</label>
+                    <input type="text" class="form-control" id="zip_code" name="zip_code" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" id="pay-btn"><i class="bi bi-credit-card-fill"></i> Buy</button>
+            
+        </form>
+    </div>
+</div>
+
+<!-- Razorpay's Javascript code. -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+
+        // Enter the Key ID generated from the Dashboard
+        key: "{{ razorpay_merchant_key }}",
+
+        // Amount is in currency subunits.
+        // Default currency is INR. Hence,
+        // 50000 refers to 50000 paise
+        amount: "{{ razorpay_amount }}",
+        currency: "{{ currency }}",
+
+        // Your/store name.
+        name: "Evolves",
+
+        // Pass the `id` obtained in the response of Step 1
+        order_id: "{{ razorpay_order_id }}",
+        callback_url: "{{ callback_url }}",
+
+        notify: {
+            sms: true,
+            email: true
+        },
+
+        modal: {
+            ondismiss: function(){
+                // GET request to delete empty order
+                $.get('/api/order/', {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    order_id: '{{ razorpay_order_id }}',
+                });
+            }
+        }
+    };
+    
+    // initialise razorpay with the options.
+    var rzp1 = new Razorpay(options);
+    
+    // add event listener to the payment button.
+    document.getElementById("pay-btn").onclick = function (e) {
+
+        // get all the inputs within the submitted form
+        var inputs = document.getElementById('form').getElementsByTagName('input');
+        for (var i = 0; i < inputs.length; i++) {
+            // only validate the inputs that have the required attribute
+            if(inputs[i].hasAttribute("required")){
+                if(inputs[i].value == ""){
+                    // found an empty field that is required
+                    alert("Please fill all required fields");
+                    return;
+                }
+            }
+        }
+
+        // POST request to create new order
+        let data = $('form').serialize();
+        data += '&order_id={{ razorpay_order_id }}&amount={{ razorpay_amount }}';
+        $.post('/api/order/', data);
+
+        rzp1.open();
+        e.preventDefault();
+    };
+  </script>
+
+{% endblock body %}

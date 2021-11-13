@@ -1,14 +1,27 @@
 from json.encoder import JSONEncoder
 from django import forms
 from django.http.request import QueryDict
-from django.http.response import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.http.response import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 
 from django.contrib.auth.models import User
 from account.models import UserProfile
-from .models import Product, ProductReview
+from .models import Product, ProductReview, Order
 from .forms import UpdateCartForm
 from django.db.models import Avg
+
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseBadRequest
+
+
+# RAZORPAY logic credit: https://www.geeksforgeeks.org/razorpay-integration-in-django/
+
+# authorize razorpay client with API Keys.
+razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+
 
 # Create your views here.
 
@@ -116,3 +129,120 @@ def delete_cart(request, product_id):
         else:
             data = {'loggedin': False}
     return JsonResponse(data)
+
+
+# THIS FUNCTION HANDLES THE `ORDER` when Buy button is clicked
+def order(request):
+    user = request.user
+    if user.is_authenticated and user.userprofile.cart != '[]':
+        if request.method == 'GET':
+            # code to delete empty order
+            order_id = request.GET.get('order_id')
+            Order.objects.filter(razp_order_id=order_id).delete()
+        elif request.method == 'POST':
+            # Code to create an order
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            address = request.POST.get('address1') + ', ' + request.POST.get('address2')
+            city = request.POST.get('city')
+            state = request.POST.get('state')
+            zip_code = int(request.POST.get('zip_code'))
+            items = user.userprofile.cart
+            razp_amount = int(request.POST.get('amount')) / 100 # amount in Rs.
+            order_id = request.POST.get('order_id')
+
+            order = Order(user=user, name=name, email=email, phone_no=phone_no,
+                            address=address, city=city, state=state, zip_code=zip_code,
+                            items=items, razp_amount=razp_amount, razp_order_id=order_id)
+            order.save()
+    return HttpResponse()
+
+def checkout(request):
+    user = request.user
+
+    # if user isn't authenticated or cart is empty
+    if not user.is_authenticated or user.userprofile.cart == '[]':
+        return redirect(reverse('account:login'))
+    
+    total_price = user.userprofile.total_price()
+
+    currency = 'INR'
+    amount = int(total_price * 100) #  money in integer (paise)
+
+    # Create a Razorpay Order
+    razorpay_order = razorpay_client.order.create(dict(amount=amount, currency=currency, payment_capture='0'))
+
+    # order id of newly created order.
+    razorpay_order_id = razorpay_order['id']
+    callback_url = '/paymenthandler/'
+    
+    # we need to pass these details to frontend.
+    context = {}
+    context['razorpay_order_id'] = razorpay_order_id
+    context['razorpay_merchant_key'] = settings.RAZOR_KEY_ID
+    context['razorpay_amount'] = amount
+    context['currency'] = currency
+    context['callback_url'] = callback_url
+
+    context['auto_fill'] = {
+        'name': user.userprofile.get_full_name() if user.userprofile.get_full_name() != ' ' else '',
+        'email': user.email,
+        'phone_no': user.userprofile.phone_no
+    }
+    context['cart'] = user.userprofile.cart
+
+    return render(request, 'shop/checkout.html', context)
+
+
+@csrf_exempt
+def callback(request):
+    if request.method == "POST":
+        try:
+            # get the required parameters from post request.
+            payment_id = request.POST.get('razorpay_payment_id', '')
+            razorpay_order_id = request.POST.get('razorpay_order_id', '')
+            signature = request.POST.get('razorpay_signature', '')
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            }
+
+            # verify the payment signature.
+            result = razorpay_client.utility.verify_payment_signature(params_dict)
+
+            order_object = Order.objects.filter(razp_order_id=razorpay_order_id)
+
+            order_object.update(
+                razp_payment_id=payment_id,
+                razp_signature=signature,
+            )
+            
+            if result is None:
+                total_price = request.user.userprofile.total_price()
+                amount = int(total_price * 100) #  money in integer (paise)
+                try:
+                    # capture the payemt
+                    razorpay_client.payment.capture(payment_id, amount)
+
+                    order_object.update(status='success')
+                    UserProfile.objects.filter(user=request.user).update(cart='[]')
+
+                    # render success page on successful caputre of payment
+                    return render(request, 'shop/paymentsuccess.html', {'order': order_object.first()})
+                except:
+                    # if there is an error while capturing payment.
+                    order_object.update(status='failure')
+                    return render(request, 'shop/paymentfail.html', {'order': order_object.first()})
+            else:
+                # if signature verification fails.
+                order_object.update(status='failure')
+                return render(request, 'shop/paymentfail.html', {'order': order_object.first()})
+        except:
+
+            # if we don't find the required parameters in POST data
+            return HttpResponseBadRequest()
+    else:
+       # if other than POST request is made.
+        return HttpResponseBadRequest()

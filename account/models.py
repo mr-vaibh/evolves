@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
+from shop.models import Product
+
 # Create your models here.
 
 gender_choices = (
@@ -30,6 +32,20 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+    def total_price(self):
+        import json
+        from django.shortcuts import get_object_or_404
+        from shop.models import Product
+
+        cart = json.loads(self.cart)
+
+        total_price = 0
+        for product in cart:
+            product_net_price_each = get_object_or_404(Product, slug=product['slug']).net_price_each()
+            total_price += product_net_price_each * product['quantity']
+        
+        return round(total_price, 2)
     
     # === PS: Ignore should have 'self' as first argument warning ===
     # Create a user profile when a user is created

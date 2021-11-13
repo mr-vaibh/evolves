@@ -68,7 +68,12 @@ a {
 
     </ul>
     
-    <a href="#" class="btn btn-primary btn-lg float-end my-3"><i class="bi bi-credit-card-fill"></i> Checkout &amp; Pay</a>
+    {% if cart != '[]' %}
+    <div class="my-3 text-center d-flex align-items-center justify-content-end">
+        <a href="#" id="clear-cart" onclick="clear_cart();" class="btn btn-danger mx-2">Clear Cart <i class="bi bi-stars"></i></a>
+        <a href="{% url 'shop:checkout' %}" class="btn btn-primary btn-lg mx-2">Checkout <i class="bi bi-arrow-right-circle-fill"></i></a>
+    </div>
+    {% endif %}
 
     
 </div>
@@ -134,6 +139,14 @@ $('.delete-product').on('click', (e) => {
     const productId = parseInt(iconId.slice(8, iconId.length))
 
     delete_cart(productId, csrftoken);
+});
+
+
+// Clear Cart
+$('#clear-cart').on('click', () => {
+    update_cart([], '{{ csrf_token }}');
+    alert('Cart Cleared!');
+    window.location = '/';
 });
 
 {% endblock js %}

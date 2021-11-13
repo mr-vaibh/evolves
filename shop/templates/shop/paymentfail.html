@@ -1,0 +1,115 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Your Shopping Cart | Evolves{% endblock title %}
+
+{% block css %}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.delete-product {
+    font-size: 18px;
+    color: red;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.product-name {
+    font-size: 1.2em;
+}
+.product-price {
+    font-size: .8em;
+}
+.product-image {
+    width: 100px;
+}
+
+.product-div {
+    flex-direction: row;
+}
+
+@media all and (max-width: 500px) {
+    .product-div {
+        flex-direction: column;
+    }
+    .product-name {
+        font-size: 1em;
+    }
+    .product-price {
+        font-size: .6em;
+    }
+}
+
+{% endblock css %}
+
+{% block body %}
+
+<div class="container w-75 my-5">
+    <h1 class="text-center">Your payment <span class="fw-bold" style="color: red;">FAILED</span>! 😟</h1>
+    <h4 class="text-center">ORDER # {{ order.id }}</h4>
+
+    <div class="my-4 text-center">
+        <a href="{% url 'shop:checkout' %}" class="btn btn-primary mx-2">Retry Checkout <i class="bi bi-arrow-right-circle-fill"></i></a>
+        <a href="#" id="clear-cart" wclass="btn btn-danger mx-2">Clear Cart <i class="bi bi-stars"></i></a>
+    </div>
+
+    <p class="fst-italic" style="border-left: 5px solid #dadada; padding-left: 1em;">
+        <strong>Note:</strong>
+        In case if your money has been deducted, please don't worry it will be refunded within 24 hrs
+        <br>
+        <strong>Support:</strong>
+        If you are facing any problem regarding refund or in-general any, please don't hesitate to reach us out at <a href="mailto:shuklavaibhav336@gmail.com" class="text-decoration-underline">wedontgiveash*t@evolves.com</a>
+    </p>
+
+    <h3 class="mt-5">CART wasn't deprecated — payment was unsuccessful</h3>
+
+    <ul class="list-group mx-auto">
+        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+            <span>Product</span>
+            <span>Quantity</span>
+        </li>
+        
+        <div id="cart-list"></div>
+    </ul>
+
+    
+</div>
+
+{% endblock body %}
+
+{% block js %}
+
+
+const cart = JSON.parse(localStorage.getItem('cart'));
+
+// to list and display all cart items
+cart.forEach(product => {
+    let newPriceString = product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    
+    $('#cart-list').append(`<li id="listPr${product.id}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
+                                <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
+                                    <img src="${product.img}" alt="MacBook Air" class="product-image">
+                                    
+                                    <div class="d-flex flex-column align-items-start flex-wrap p-3">
+                                        <p class="product-name">${product.name}</p>
+                                        <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString + ".00"}</span>
+                                    </div>
+                                </a>
+                                
+                                <div class="d-flex flex-row">
+                                    <span class="badge rounded-pill bg-primary fs-6">${product.quantity}</span>
+                                </div>
+                            </li>`);
+});
+
+
+// Clear Cart
+$('#clear-cart').on('click', () => {
+    update_cart([], '{{ csrf_token }}');
+    alert('Cart Cleared!');
+    window.location = '/';
+});
+
+{% endblock js %}
