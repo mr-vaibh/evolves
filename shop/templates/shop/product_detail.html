@@ -88,10 +88,39 @@
             <div class="carousel-inner">
                 {% for media in product_medias %}
                     {% if product.video.url == media.url %}
-                    <div class="video carousel-item {% if forloop.first %}active{% endif %}">
-                        <video id="video" class="d-block w-100" src="{{ media.url }}"></video>
+                    <div class="video carousel-item {% if forloop.first %}active{% endif %}" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#videoModal">
+                        <video id="video" class="d-block w-100" src="{{ media.url }}" controlsList="nodownload"></video>
                         <i class="bi bi-play-circle-fill"></i>
                     </div>
+
+                    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="videoModalLabel">Video Playback</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="display: inline-flex">
+                                    <video width="100%" height="100%" controls controlsList="nodownload">
+                                        <source src="{{ media.url }}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // To handle video PLAY/PAUSE in modal
+                        $('document').ready(function() {
+                            $('#videoModal').modal().on('shown.bs.modal', function(){
+                                $(this).find('video')[0].play();
+                            });
+                            $('#videoModal').modal().on('hidden.bs.modal', function(){
+                                $(this).find('video')[0].pause();
+                            });
+                        })
+                    </script>
                     {% else %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <img src="{{ media.url }}" class="d-block w-100" alt="{{ product.name }}">
