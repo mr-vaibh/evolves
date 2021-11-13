@@ -8,8 +8,11 @@ django = "*"
 pillow = "*"
 django-cron = "*"
 razorpay = "*"
+django-heroku = "*"
+django-environ = "*"
 
 [dev-packages]
+python-dotenv = "*"
 
 [requires]
 python_version = "3.10"

@@ -4,6 +4,12 @@ from .base import *
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+
 # RazorPay configs
-RAZOR_KEY_ID = 'rzp_test_8uIu7vw6hp7kTe'
-RAZOR_KEY_SECRET = 'CcjFwnABGCKfvppkSXyO7Ecr'
+from dotenv import load_dotenv
+
+env_path = BASE_DIR / '.env'
+load_dotenv(dotenv_path=env_path)
+
+RAZOR_KEY_ID = os.environ.get('RAZOR_KEY_ID', '')
+RAZOR_KEY_SECRET = os.environ.get('RAZOR_KEY_SECRET', '')

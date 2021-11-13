@@ -27,6 +27,11 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': env('API_SECRET'),
 }
 
+# RazorPay configs
+RAZOR_KEY_ID = env('RAZOR_KEY_ID')
+RAZOR_KEY_SECRET = env('RAZOR_KEY_SECRET')
+
+
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
