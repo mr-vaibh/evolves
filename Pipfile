@@ -10,6 +10,9 @@ django-cron = "*"
 razorpay = "*"
 django-heroku = "*"
 django-environ = "*"
+gunicorn = "*"
+whitenoise = "*"
+django-cloudinary-storage = "*"
 
 [dev-packages]
 python-dotenv = "*"
