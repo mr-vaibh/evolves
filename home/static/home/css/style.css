@@ -19,7 +19,16 @@
     border-radius: 0.125rem;
 }
 
-.dropdown:hover .dropdown-menu {
-    display: block;
-    margin-top: 0; /* remove the gap so it doesn't close */
+@media all and (max-width: 768px) {
+    #search-form::after {
+        content: none;
+    }
+}
+
+@media all and (min-width: 990px) {
+    /* Only for desktop version */
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; /* remove the gap so it doesn't close */
+    }
 }
