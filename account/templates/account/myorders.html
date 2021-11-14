@@ -53,52 +53,60 @@ a {
 
     <hr>
 
-    {% for order in orders %}
-    <div class="border border-secondary rounded d-flex flex-column my-5">
-        <li class="order-strip list-group-item d-flex flex-wrap justify-content-evenly align-items-center fw-bold">
-            <span class="border border-secondary rounded p-1">ORDER # {{ order.id }}</span>
-            <span class="border border-secondary rounded p-1">{{ order.name }}</span>
-            <span class="border border-secondary rounded p-1">{{ order.datetime |date:"j F Y" }}</span>
-            <span class="border border-secondary rounded p-1">&#x20B9; <span class="price">{{ order.razp_amount }}</span></span>
-        </li>
-        <div class="orders-and-btns d-flex justify-content-between mx-2">
-            <ul id="cart-list-{{ order.id }}" class="list-group list-group-flush"></ul>
+    {% if orders %}
 
-            <div class="d-flex flex-column">
-                <button class="btn btn-secondary my-1">Track Package</button>
-                <button class="btn btn-secondary my-1">Return</button>
-                <button class="btn btn-secondary my-1">Buy again</button>
-                <button class="btn btn-secondary my-1">Write a review</button>
-                <button class="btn btn-secondary my-1">Give feedback</button>
+        {% for order in orders %}
+        <div class="border border-secondary rounded d-flex flex-column my-5">
+            <li class="order-strip list-group-item d-flex flex-wrap justify-content-evenly align-items-center fw-bold">
+                <span class="border border-secondary rounded p-1">ORDER # {{ order.id }}</span>
+                <span class="border border-secondary rounded p-1">{{ order.name }}</span>
+                <span class="border border-secondary rounded p-1">{{ order.datetime |date:"j F Y" }}</span>
+                <span class="border border-secondary rounded p-1">&#x20B9; <span class="price">{{ order.razp_amount }}</span></span>
+            </li>
+            <div class="orders-and-btns d-flex justify-content-between mx-2">
+                <ul id="cart-list-{{ order.id }}" class="list-group list-group-flush"></ul>
+
+                <div class="d-flex flex-column">
+                    <button class="btn btn-secondary my-1">Track Package</button>
+                    <button class="btn btn-secondary my-1">Return</button>
+                    <button class="btn btn-secondary my-1">Buy again</button>
+                    <button class="btn btn-secondary my-1">Write a review</button>
+                    <button class="btn btn-secondary my-1">Give feedback</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        {% autoescape off %}
-        let cart{{ order.id }} = JSON.parse('{{ order.items }}');
-        {% endautoescape %}
+        <script>
+            {% autoescape off %}
+            let cart{{ order.id }} = JSON.parse('{{ order.items }}');
+            {% endautoescape %}
 
-        cart{{ order.id }}.forEach(product => {
-        let newPriceString = addCommas(product.price);
-        
-        $('#cart-list-{{ order.id }}').append(`<li id="listPr${product.id}-{{ order.id }}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
-                                                    <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
-                                                        <img src="${product.img}" alt="${product.name}" class="product-image">
-                                                        
-                                                        <div class="d-flex flex-column align-items-start flex-wrap p-3">
-                                                            <p class="product-name">${product.name}</p>
-                                                            <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString}</span>
+            cart{{ order.id }}.forEach(product => {
+            let newPriceString = addCommas(product.price);
+            
+            $('#cart-list-{{ order.id }}').append(`<li id="listPr${product.id}-{{ order.id }}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
+                                                        <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
+                                                            <img src="${product.img}" alt="${product.name}" class="product-image">
+                                                            
+                                                            <div class="d-flex flex-column align-items-start flex-wrap p-3">
+                                                                <p class="product-name">${product.name}</p>
+                                                                <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString}</span>
+                                                            </div>
+                                                        </a>
+
+                                                        <div class="d-flex flex-row">
+                                                            <span class="badge rounded-pill bg-primary fs-6">${product.quantity}</span>
                                                         </div>
-                                                    </a>
+                                                    </li>`);
+            });
+        </script>
+        {% endfor %}
 
-                                                    <div class="d-flex flex-row">
-                                                        <span class="badge rounded-pill bg-primary fs-6">${product.quantity}</span>
-                                                    </div>
-                                                </li>`);
-        });
-    </script>
-    {% endfor %}
+    {% else %}
+
+        <h3>You have no orders yet.</h3>
+    
+    {% endif %}
 </div>
 
 {% endblock body %}
