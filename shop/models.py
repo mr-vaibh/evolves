@@ -105,7 +105,7 @@ class Order(models.Model):
         ('pending', 'Pending'),
         ('refund', 'Refund'),
     ]
-    
+
     user = models.ForeignKey(User, verbose_name=_("Related User"), on_delete=models.CASCADE)
     name = models.CharField(_("Order in name of"), max_length=100, default='', blank=False)
     email = models.EmailField(_("Email"), blank=True, max_length=254)

@@ -86,15 +86,15 @@ const cart = JSON.parse(localStorage.getItem('cart'));
 
 // to list and display all cart items
 cart.forEach(product => {
-    let newPriceString = product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    let newPriceString = addCommas(product.price)
     
     $('#cart-list').append(`<li id="listPr${product.id}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
                                 <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
-                                    <img src="${product.img}" alt="MacBook Air" class="product-image">
+                                    <img src="${product.img}" alt="${pro}" class="product-image">
                                     
                                     <div class="d-flex flex-column align-items-start flex-wrap p-3">
                                         <p class="product-name">${product.name}</p>
-                                        <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString + ".00"}</span>
+                                        <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString}</span>
                                     </div>
                                 </a>
                                 

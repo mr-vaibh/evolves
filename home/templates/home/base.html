@@ -53,8 +53,23 @@
                     <button class="btn btn-outline-success" id="search" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </ul>
-            <div>
-                {% if request.user.is_authenticated %}<span class="mx-1">Hi, <b>{{ request.user|upper }}</b></span>{% endif %}
+            <div class="navbar-nav">
+
+                {% if request.user.is_authenticated %}
+                <div class="dropdown d-inline">
+                    <span class="btn btn-secondary dropdown-toggle" type="button">
+                        <span class="mx-1">Hi, <b>{{ request.user|upper }}</b></span>
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Your Account</a></li>
+                        <li><a class="dropdown-item" href="{% url 'account:myorders' %}">Your Orders</a></li>
+                        <li><a class="dropdown-item" href="#">Your Reviews</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">About Us</a></li>
+                        <li><a class="dropdown-item" href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                {% endif %}
 
                 <a class="btn btn-primary position-relative mx-1" type="button" href="{% url 'account:cart' %}">
                     <i class="bi bi-cart"></i>

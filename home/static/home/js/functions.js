@@ -1,11 +1,17 @@
 function parseListOfObjects(string) {
     // Logic: https://gist.github.com/mr-vaibh/3f02a58e7dbf698347675ea72d9bdc2f
-    return string.slice(1, -1).split(",").map(obj => JSON.parse(obj))
+    return string.slice(1, -1).split(",").map(obj => JSON.parse(obj));
 }
 
 function removeDuplicates(data, key) {
-    return [...new Map(data.map(item => [key(item), item])).values()]
+    return [...new Map(data.map(item => [key(item), item])).values()];
 };
+
+
+function addCommas(string) {
+    newString = string.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    return newString.includes('.0') ? newString : newString + ".00";
+}
 
 
 function get_cart(reload=false) {

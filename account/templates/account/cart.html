@@ -49,7 +49,6 @@ a {
 <div class="container w-75 my-5">
     <h1>Your Cart</h1>
 
-
     <ul class="list-group mx-auto">
         <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
             <span>Product</span>
@@ -65,7 +64,6 @@ a {
                 <span id="total-price">0</span>
             </span>
         </li>
-
     </ul>
     
     {% if cart != '[]' %}
@@ -75,7 +73,6 @@ a {
     </div>
     {% endif %}
 
-    
 </div>
 
 {% endblock body %}
@@ -94,15 +91,15 @@ if (localStorage.getItem('cart') !== null) {
     
     // to list and display all cart items
     cart.forEach(product => {
-        let newPriceString = product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        let newPriceString = addCommas(product.price);
         
         $('#cart-list').append(`<li id="listPr${product.id}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
                                     <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
-                                        <img src="${product.img}" alt="MacBook Air" class="product-image">
+                                        <img src="${product.img}" alt="${product.name}" class="product-image">
                                         
                                         <div class="d-flex flex-column align-items-start flex-wrap p-3">
                                             <p class="product-name">${product.name}</p>
-                                            <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString + ".00"}</span>
+                                            <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString}</span>
                                         </div>
                                     </a>
                                     
@@ -126,8 +123,8 @@ if (cart !== null) {
     cart.forEach(product => {
         totalCost += product.price * product.quantity;
     });
-    totalCost = totalCost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") // adding commas in total price
-    $('#total-price').text(totalCost + ".00");
+    totalCost = addCommas(totalCost);
+    $('#total-price').text(totalCost);
 }
 
 

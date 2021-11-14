@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth.forms import UserCreationForm
 
+from shop.models import Order
 
 def register(request):
     if request.method == 'POST':
@@ -24,5 +27,11 @@ def cart(request):
     
     if request.user.is_authenticated:
         context['cart'] = request.user.userprofile.cart
-    
     return render(request, 'account/cart.html', context)
+
+@login_required
+def my_orders(request):
+    context = {
+        'orders': Order.objects.filter(user=request.user).order_by('-datetime')
+    }
+    return render(request, 'account/myorders.html', context)

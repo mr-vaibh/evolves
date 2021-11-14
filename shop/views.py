@@ -1,11 +1,8 @@
-from json.encoder import JSONEncoder
-from django import forms
-from django.http.request import QueryDict
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.models import User
 from account.models import UserProfile
 from .models import Product, ProductReview, Order
 from .forms import UpdateCartForm
@@ -132,9 +129,10 @@ def delete_cart(request, product_id):
 
 
 # THIS FUNCTION HANDLES THE `ORDER` when Buy button is clicked
+@login_required
 def order(request):
     user = request.user
-    if user.is_authenticated and user.userprofile.cart != '[]':
+    if user.userprofile.cart != '[]':
         if request.method == 'GET':
             # code to delete empty order
             order_id = request.GET.get('order_id')
@@ -158,11 +156,13 @@ def order(request):
             order.save()
     return HttpResponse()
 
+
+@login_required
 def checkout(request):
     user = request.user
 
     # if user isn't authenticated or cart is empty
-    if not user.is_authenticated or user.userprofile.cart == '[]':
+    if user.userprofile.cart == '[]':
         return redirect(reverse('account:login'))
     
     total_price = user.userprofile.total_price()

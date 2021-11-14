@@ -111,15 +111,15 @@ const products = '{{ order.items }}';
 
 // to list and display all cart items
 JSON.parse(products).forEach(product => {
-    let newPriceString = product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    
+    let newPriceString = addCommas(product.price);
+
     $('#product-list').append(`<li id="listPr${product.id}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
                                 <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
-                                    <img src="${product.img}" alt="MacBook Air" class="product-image">
+                                    <img src="${product.img}" alt="${product.name}" class="product-image">
                                     
                                     <div class="d-flex flex-column align-items-start flex-wrap p-3">
                                         <p class="product-name">${product.name}</p>
-                                        <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString + ".00"}</span>
+                                        <span class="badge rounded-pill bg-dark">&#x20B9; ${newPriceString}</span>
                                     </div>
                                 </a>
                                 
@@ -129,8 +129,8 @@ JSON.parse(products).forEach(product => {
                             </li>`);
 });
 
-totalCost = '{{ order.razp_amount }}'.replace(/\B(?=(\d{3})+(?!\d))/g, ",") // adding commas in total price
-$('#total-price').text(totalCost + ".00");
+totalCost = addCommas({{ order.razp_amount }}) // adding commas in total price
+$('#total-price').text(totalCost);
 
 
 $('#print-receipt').on('click', () => {
