@@ -109,7 +109,7 @@ class Order(models.Model):
     user = models.ForeignKey(User, verbose_name=_("Related User"), on_delete=models.CASCADE)
     name = models.CharField(_("Order in name of"), max_length=100, default='', blank=False)
     email = models.EmailField(_("Email"), blank=True, max_length=254)
-    phone_no = models.PositiveIntegerField(_("Phone Number"), blank=True, null=True)
+    phone_no = models.PositiveBigIntegerField(_("Phone Number"), blank=True, null=True)
     address = models.CharField(_("Full Address"), max_length=500, default='', blank=False, null=True)
     city = models.CharField(_("City"), max_length=500, default='', blank=False, null=True)
     state = models.CharField(_("State"), max_length=500, default='', blank=False, null=True)
