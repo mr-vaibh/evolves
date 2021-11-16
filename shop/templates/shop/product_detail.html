@@ -51,6 +51,9 @@
 .price-cart div {
     margin: 0 1em 0 1em;
 }
+.price-cart .card {
+    max-width: 200px;
+}
 
 .price {
     color: rgb(201, 0, 0);
@@ -65,6 +68,12 @@
 }
 .unavailable {
     color: rgb(201, 0, 0);
+}
+
+@media all and (max-width: 1200px) {
+    .price-cart {
+        flex-direction: column;
+    }
 }
 
 @media all and (max-width: 770px) {
@@ -204,7 +213,7 @@
                                 <option value="10">10</option>
                             </select>
                             
-                            <button type="button" id="add-to-cart" class="btn btn-primary">Add to Cart</button>
+                            <button type="button" id="add-to-cart" class="btn btn-primary btn-sm col-12">Add to Cart</button>
                         </div>
                     </div>
                 </form>
