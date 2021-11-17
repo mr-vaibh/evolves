@@ -1,7 +1,7 @@
+/* Search Section */
 #search-form {
     position: relative;
 }
-
 #search-form::after {
     position: absolute;
     top: 0.4rem;
@@ -19,13 +19,27 @@
     border-radius: 0.125rem;
 }
 
+/* Profile Menu Section */
+.profile-menu {
+    margin-top: 11px !important;
+}
+
+
+/* Discounted Price Display */
+.discounted-price {
+    color: rgb(223 0 0);
+    font-size: 1.5em;
+}
+.precent-off {
+    color: rgb(0 0 0);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+
 @media all and (max-width: 768px) {
     #search-form::after {
         content: none;
     }
 }
 
-
-.profile-menu {
-    margin-top: 11px !important;
-}

@@ -1,4 +1,5 @@
 {% extends 'home/base.html' %}
+{% load humanize %}
 
 {% block title %}Thanks for Shopping | Evolves{% endblock title %}
 
@@ -65,7 +66,7 @@ a {
                 </tr>
                 <tr>
                     <td>TOTAL</td>
-                    <td>&#x20B9; <span id="total-price">0</span></td>
+                    <td>&#x20B9; {{ order.razp_amount|floatformat:2|intcomma }}</td>
                 </tr>
                 <tr>
                     <td>EMAIL/PHONE</td>
@@ -129,10 +130,8 @@ JSON.parse(products).forEach(product => {
                             </li>`);
 });
 
-totalCost = addCommas({{ order.razp_amount }}) // adding commas in total price
-$('#total-price').text(totalCost);
 
-
+// Print Receipt Logic
 $('#print-receipt').on('click', () => {
     var printContent = document.getElementById('printable');
     var WinPrint = window.open('', '', 'width=900,height=650');

@@ -1,0 +1,10 @@
+{% load home_tags %}
+{% load humanize %}
+
+{% if product.discount %}
+    <span class="discounted-price">&#x20B9;{% product_price product=product %} </span>
+    <strike>&#x20B9;{{ product.price|intcomma }} </strike>
+    <span class="precent-off"> &lpar;{{ product.discount }}&percnt; OFF&rpar;</span>
+{% else %}
+    <span class="discounted-price">&#x20B9;{{ product.price|intcomma }}</span>
+{% endif %}

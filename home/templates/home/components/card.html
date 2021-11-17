@@ -1,6 +1,3 @@
-{% load humanize %}
-{% load home_tags %}
-
 <div class="col">
     <div class="card h-100">
         <a href="{% url 'shop:product_detail' slug=product.slug %}">
@@ -14,19 +11,7 @@
         </div>
         <div class="card-footer">
             <small class="text-muted">
-            {% if product.discount %}
-                <span class="price">
-                    &#x20B9;{% product_price product=product %}
-                </span>
-                <strike>&#x20B9;{{ product.price|intcomma }}</strike>
-                <span class="off">
-                    &lpar;{{ product.discount }}&percnt; OFF&rpar;
-                </span>
-            {% else %}
-                <span class="price">
-                    &#x20B9;{{ product.price|intcomma }}
-                </span>
-            {% endif %}
+                {% include 'home/components/discount_price.html' with product=product %}
             </small>
         </div>
     </div>
