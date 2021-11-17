@@ -2,7 +2,7 @@ from django.core.checks import messages
 from django_cron import CronJobBase, Schedule
 
 class MyCronJob(CronJobBase):
-    RUN_EVERY_MINS = 0.01 # every 2 hours
+    RUN_EVERY_MINS = 120 # every 2 hours
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'home.cron.MyCronJob'    # a unique code
