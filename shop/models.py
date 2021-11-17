@@ -4,6 +4,7 @@ from django.db.models.expressions import F
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 from .validators import validate_video_size, validate_video_extension
 
 # Create your models here.
@@ -87,10 +88,19 @@ class Product(models.Model):
             super().delete(*args, **kwargs)
 
 class ProductReview(models.Model):
+
+    STARS_CHOICES = [
+        (1, '1 - Terrible'),
+        (2, '2 - Poor'),
+        (3, '3 - Average'),
+        (4, '4 - Good'),
+        (5, '5 - Excellent'),
+    ]
+
     user = models.ForeignKey(User, verbose_name=_("Related User"), on_delete=models.CASCADE)
     product = models.ForeignKey("shop.Product", verbose_name=_("Related Product"), on_delete=models.CASCADE)
     review = models.TextField(_("Product Review"), max_length=500)
-    stars = models.PositiveSmallIntegerField(_("Stars"), null=True)
+    stars = models.PositiveSmallIntegerField(_("Stars"), validators=[MinValueValidator(0), MaxValueValidator(5)], choices=STARS_CHOICES, null=True)
     datetime = models.DateTimeField(_("Review Date & Time"), auto_now_add=True)
 
     def __str__(self) -> str:
