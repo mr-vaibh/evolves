@@ -33,6 +33,7 @@ def product_detail(request, slug):
 
     # very ugly approach to handle stars
     avg_stars = product_reviews.aggregate(Avg('stars'))['stars__avg']
+    avg_stars = avg_stars or 0
     half_star = int(str(avg_stars)[-1]) > 5
 
     import json

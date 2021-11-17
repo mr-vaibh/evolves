@@ -40,7 +40,7 @@
     font-size: 3em;
 }
 
-.bi-star, .bi-star-fill, .bi-star-half {
+.stars .bi {
     color: #ffd700;
 }
 
@@ -147,6 +147,7 @@
             <p>{{ product.description }}</p>
 
             <div style="font-size: 1.2em;">
+                {% if avg_stars != 0 %}
                 <p class="stars">
                     {% for star in filled_stars %}
                         {% if forloop.last and half_star %}
@@ -158,8 +159,12 @@
                     {% for star in unfilled_stars %}
                         <i class="bi bi-star"></i>
                     {% endfor %}
+
                     {{ avg_stars|floatformat }} out of 5
                 </p>
+                {% else %}
+                <p class="stars"><i class="bi bi-exclamation-octagon-fill"></i> No reviews</p>
+                {% endif %}
                 
                 <p>
                     {% if product.replacement != 'No' %}
