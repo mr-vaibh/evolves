@@ -177,13 +177,8 @@
 
                     {% include 'home/components/discount_price.html' with product=product %}
                     <p class="available">In Stock</p>
-                    
-                {% else %}
-                    <p class="unavailable">Currently Unavailable</p>
-                {% endif %}
                 </div>
 
-                {% if product.stocks != 0 %}
                 <form method="post" class="cart-section">
                     {% csrf_token %}
                     <div class="card">
@@ -206,6 +201,10 @@
                         </div>
                     </div>
                 </form>
+                    
+                {% else %}
+                    <p class="unavailable">Currently Unavailable</p>
+                </div>
                 {% endif %}
             </div>
 
