@@ -9,7 +9,6 @@
  - FIX: admin
 
  Optional
- - bold border in your orders
  - Pagination in Your Orders
 
  Advanced

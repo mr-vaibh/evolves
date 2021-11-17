@@ -208,6 +208,7 @@
                 </form>
                 {% endif %}
             </div>
+
             <div id="liveAlertPlaceholder"></div>
 
             <table id="features" class="table table-sm mt-3">
@@ -282,9 +283,8 @@ $('#add-to-cart').on('click', function (e) {
 
     update_cart(updatedCart, csrftoken);
     
+    
     // Live Alert Placeholder
-
-
     $('#liveAlertPlaceholder').html(`<div class="alert alert-success alert-dismissible" role="alert">
                                         Cart Updated! <strong>${quantityValue} of this product</strong> is present in the cart
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
