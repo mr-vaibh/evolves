@@ -87,7 +87,7 @@ def update_cart(request):
                 # convert to JSON
                 cart_obj = json.loads(cleaned_cart_data)
 
-                # To find for duplicate product and just update the value
+                # check if duplicate product exists and just update the value if so
                 for product in cart_obj[:-1]:
                     if product['id'] == cart_obj[-1]['id']:
                         product['quantity'] = cart_obj[-1]['quantity']

@@ -218,6 +218,7 @@
                     </div>
                 </form>
             </div>
+            <div id="liveAlertPlaceholder"></div>
 
             <table id="features" class="table table-sm mt-3">
                 <tbody>
@@ -290,6 +291,17 @@ $('#add-to-cart').on('click', function (e) {
     const updatedCart = [...oldCartObj, newCartObj];
 
     update_cart(updatedCart, csrftoken);
+    
+    // Live Alert Placeholder
+
+
+    $('#liveAlertPlaceholder').html(`<div class="alert alert-success alert-dismissible" role="alert">
+                                        <strong>Cart Updated!</strong> ${quantityValue} of this product is in the cart
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>`);
 });
+
+
+
 
 {% endblock js %}

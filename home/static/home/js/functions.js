@@ -61,8 +61,9 @@ function update_cart(updatedCart, csrftoken) {
                 for (let i = 0; i < localCart.length - 1; i++) {
                     const product = localCart[i];
                     
-                    if (product['id'] == localCart[localCart.length - 1]['id']) {
-                        product['quantity'] = localCart[localCart.length - 1]['quantity'];
+                    // last item is newest
+                    if (product['id'] == localCart.at(-1)['id']) {
+                        product['quantity'] = localCart.at(-1)['quantity'];
                         localCart.pop();
                         break;
                     }
