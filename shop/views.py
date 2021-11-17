@@ -188,7 +188,7 @@ def checkout(request):
     context['auto_fill'] = {
         'name': user.userprofile.get_full_name() if user.userprofile.get_full_name() != ' ' else '',
         'email': user.email,
-        'phone_no': user.userprofile.phone_no
+        'phone_no': user.userprofile.phone_no if user.userprofile.phone_no else '',
     }
     context['cart'] = user.userprofile.cart
 
