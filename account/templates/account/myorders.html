@@ -1,4 +1,5 @@
 {% extends 'home/base.html' %}
+{% load humanize %}
 
 {% block title %}Your Orders | Evolves{% endblock title %}
 
@@ -56,12 +57,12 @@ a {
     {% if orders %}
 
         {% for order in orders %}
-        <div class="border border-secondary rounded d-flex flex-column my-5">
-            <li class="order-strip list-group-item d-flex flex-wrap justify-content-evenly align-items-center fw-bold">
+        <div class="border border-2 border-secondary rounded bg-light d-flex flex-column my-5">
+            <li class="order-strip list-group-item bg-light d-flex flex-wrap justify-content-evenly align-items-center fw-bold">
                 <span class="border border-secondary rounded p-1">ORDER # {{ order.id }}</span>
                 <span class="border border-secondary rounded p-1">{{ order.name }}</span>
                 <span class="border border-secondary rounded p-1">{{ order.datetime |date:"j F Y" }}</span>
-                <span class="border border-secondary rounded p-1">&#x20B9; <span class="price">{{ order.razp_amount }}</span></span>
+                <span class="border border-secondary rounded p-1">&#x20B9; {{ order.razp_amount|floatformat:2|intcomma }}</span>
             </li>
             <div class="orders-and-btns d-flex justify-content-between mx-2">
                 <ul id="cart-list-{{ order.id }}" class="list-group list-group-flush"></ul>
@@ -84,7 +85,7 @@ a {
             cart{{ order.id }}.forEach(product => {
             let newPriceString = addCommas(product.price);
             
-            $('#cart-list-{{ order.id }}').append(`<li id="listPr${product.id}-{{ order.id }}" class="list-group-item d-flex flex-row justify-content-between align-items-center">
+            $('#cart-list-{{ order.id }}').append(`<li id="listPr${product.id}-{{ order.id }}" class="list-group-item bg-light d-flex flex-row justify-content-between align-items-center">
                                                         <a href="/product/${product.slug}" class="product-div d-flex align-items-center">
                                                             <img src="${product.img}" alt="${product.name}" class="product-image">
                                                             
@@ -110,11 +111,3 @@ a {
 </div>
 
 {% endblock body %}
-
-{% block js %}
-
-$('.price').map((index, element) => {
-    element.innerText = addCommas(element.innerText.trim());
-});
-
-{% endblock js %}
