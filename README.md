@@ -5,6 +5,7 @@
  ASAP
  - BUG: cart amount remains unchanged if price is lowered and item is already persent in cart
  - URGENT: track package, is delivered?
+ - update stock value in product as cart is updated
  - search filters
  - FIX: admin
 
